@@ -10,12 +10,9 @@ func main() {
 		var c = &Conn{}
 		fmt.Println("new")
 		return c, nil
-	})
+	}, pool4go.WithMaxOpen(5), pool4go.WithMaxIdle(2))
 
-	p.SetMaxOpenConns(5)
-	p.SetMaxIdleConns(2)
-
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 3; i++ {
 		go func() {
 			for {
 
