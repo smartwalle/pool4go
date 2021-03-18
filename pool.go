@@ -40,7 +40,7 @@ type pool struct {
 	numOpenConn int
 	maxIdleConn int
 	maxOpenConn int
-	IdleTimeout time.Duration
+	idleTimeout time.Duration
 
 	running  bool
 	idleList *list.List
@@ -81,7 +81,7 @@ func (this *pool) get() (c Conn, err error) {
 		if item != nil && item.Value != nil {
 			if idleConn, ok := item.Value.(*idleConn); ok {
 				this.idleList.Remove(item)
-				if this.IdleTimeout > 0 && time.Now().After(idleConn.t.Add(this.IdleTimeout)) {
+				if this.idleTimeout > 0 && time.Now().After(idleConn.t.Add(this.idleTimeout)) {
 					this.release(idleConn.c)
 					this.mu.Unlock()
 					continue
@@ -246,5 +246,5 @@ func (this *pool) SetTestOnBorrow(f func(conn Conn, t time.Time) error) {
 }
 
 func (this *pool) SetIdleTimeout(t time.Duration) {
-	this.IdleTimeout = t
+	this.idleTimeout = t
 }
